@@ -1,0 +1,410 @@
+/* WhatsApp Contacts & DM CSV Exporter | satuxcodes (by satydev) - Apple Liquid Glass Monochrome */
+
+/* Header Action Button */
+#satux-header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(30, 41, 49, 0.78) 0%, rgba(18, 26, 31, 0.9) 100%);
+  color: #F5F5F7;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin: 0 6px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
+  z-index: 999;
+}
+body:not(.dark) #satux-header-btn,
+html:not(.dark) #satux-header-btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 242, 245, 0.95) 100%);
+  color: #1D1D1F;
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+#satux-header-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.satux-badge-filter {
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #F5F5F7;
+}
+body:not(.dark) .satux-badge-filter {
+  background: rgba(0, 0, 0, 0.08);
+  color: #1D1D1F;
+}
+
+/* Floating Capsule (Pinned at bottom-right of viewport - impossible to be blocked) */
+#satux-floating-pill {
+  position: fixed !important;
+  bottom: 28px !important;
+  right: 28px !important;
+  z-index: 9999999 !important;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(30, 41, 49, 0.82) 0%, rgba(18, 26, 31, 0.94) 100%);
+  color: #F5F5F7;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
+}
+body:not(.dark) #satux-floating-pill,
+html:not(.dark) #satux-floating-pill {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 246, 248, 0.96) 100%);
+  color: #1D1D1F;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+#satux-floating-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.55);
+}
+
+/* Apple Liquid Glass Filter Modal Overlay */
+#satux-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10000000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 20, 26, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: satuxFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+@keyframes satuxFadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+.satux-filter-card {
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(26, 36, 43, 0.88) 0%, rgba(18, 26, 31, 0.96) 100%);
+  color: #F5F5F7;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+body:not(.dark) .satux-filter-card,
+html:not(.dark) .satux-filter-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 246, 248, 0.97) 100%);
+  color: #1D1D1F;
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.satux-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.satux-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.satux-modal-subtitle {
+  font-size: 12px;
+  color: #8696A0;
+  margin-top: 3px;
+}
+.satux-modal-close {
+  background: transparent;
+  border: none;
+  color: #8696A0;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+.satux-modal-close:hover {
+  color: #F5F5F7;
+}
+body:not(.dark) .satux-modal-close:hover {
+  color: #1D1D1F;
+}
+
+/* Liquid Glass Presets Pills */
+.satux-presets-bar {
+  display: flex;
+  gap: 7px;
+}
+.satux-preset-btn {
+  flex: 1;
+  padding: 8px 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+body:not(.dark) .satux-preset-btn {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+}
+.satux-preset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+body:not(.dark) .satux-preset-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+.satux-preset-btn.satux-active {
+  background: #F5F5F7;
+  color: #121A1F;
+  border-color: #F5F5F7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+body:not(.dark) .satux-preset-btn.satux-active {
+  background: #1D1D1F;
+  color: #FFFFFF;
+  border-color: #1D1D1F;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Sections & Options */
+.satux-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #8696A0;
+}
+.satux-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.satux-option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+body:not(.dark) .satux-option-item {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+}
+.satux-option-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+body:not(.dark) .satux-option-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.satux-opt-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.satux-opt-left input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #F5F5F7;
+  margin: 0;
+}
+body:not(.dark) .satux-opt-left input[type="checkbox"] {
+  accent-color: #1D1D1F;
+}
+.satux-opt-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.satux-opt-desc {
+  font-size: 11px;
+  color: #8696A0;
+}
+.satux-opt-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  white-space: nowrap;
+}
+body:not(.dark) .satux-opt-count {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Liquid Glass Format Segmented Control */
+.satux-fmt-switch {
+  display: flex;
+  gap: 8px;
+}
+.satux-fmt-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+body:not(.dark) .satux-fmt-option {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+}
+.satux-fmt-option.satux-selected {
+  background: #F5F5F7;
+  color: #121A1F;
+  border-color: #F5F5F7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+body:not(.dark) .satux-fmt-option.satux-selected {
+  background: #1D1D1F;
+  color: #FFFFFF;
+  border-color: #1D1D1F;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Footer & High-Contrast Download Button */
+.satux-modal-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+body:not(.dark) .satux-modal-footer {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+.satux-download-action-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: #F5F5F7;
+  color: #121A1F;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: all 0.15s ease;
+}
+body:not(.dark) .satux-download-action-btn {
+  background: #1D1D1F;
+  color: #FFFFFF;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+}
+.satux-download-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+.satux-download-action-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none !important;
+}
+.satux-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8696A0;
+}
+.satux-footer-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+}
+.satux-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Liquid Glass Floating Toast */
+#satux-toast {
+  position: fixed !important;
+  bottom: 28px !important;
+  right: 28px !important;
+  z-index: 10000001 !important;
+  background: linear-gradient(135deg, rgba(30, 41, 49, 0.9) 0%, rgba(18, 26, 31, 0.96) 100%);
+  color: #F5F5F7;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  gap: 7px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body:not(.dark) #satux-toast,
+html:not(.dark) #satux-toast {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 246, 248, 0.97) 100%);
+  color: #1D1D1F;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+#satux-toast.satux-toast-warn {
+  background: rgba(45, 25, 20, 0.95);
+  border-color: rgba(255, 120, 80, 0.3);
+  color: #FFD0C0;
+}
+#satux-toast.satux-toast-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
